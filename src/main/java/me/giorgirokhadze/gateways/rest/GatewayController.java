@@ -44,8 +44,8 @@ public class GatewayController {
 
 	@PostMapping(value = "/{serialNumber}/device/create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public void createPeripheralDevice(@PathVariable String serialNumber, @Valid @RequestBody CreatePeripheralDeviceDto gatewayDto) {
-		gatewayService.createPeripheralDevice(serialNumber, gatewayDto);
+	public void createPeripheralDevice(@PathVariable String serialNumber, @Valid @RequestBody CreatePeripheralDeviceDto peripheralDeviceDto) {
+		gatewayService.createPeripheralDevice(serialNumber, peripheralDeviceDto);
 	}
 
 	@PostMapping(value = "/{serialNumber}/device/{uid}/delete")

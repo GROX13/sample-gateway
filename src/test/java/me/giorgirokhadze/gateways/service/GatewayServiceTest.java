@@ -78,4 +78,68 @@ public class GatewayServiceTest {
 		assertEquals(savedGatewayDto.getPeripheralDevices().size(), 1);
 	}
 
+	@Test
+	public void shouldAddPeripheralDevice() {
+		CreateGatewayDto gatewayDto = new CreateGatewayDto();
+		gatewayDto.setSerialNumber("1");
+		List<CreatePeripheralDeviceDto> peripheralDeviceDtos = new ArrayList<>();
+
+		CreatePeripheralDeviceDto dto = new CreatePeripheralDeviceDto();
+		dto.setStatus(PeripheralDeviceStatus.OFFLINE);
+		dto.setUid(1L);
+		dto.setVendor("test");
+
+		peripheralDeviceDtos.add(dto);
+		gatewayDto.setPeripheralDevices(peripheralDeviceDtos);
+		gatewayService.createGateway(gatewayDto);
+
+		List<GatewayDto> list = gatewayService.listGateways();
+
+		assertEquals(list.size(), 1);
+
+		GatewayDto savedGatewayDto = list.get(0);
+
+		assertEquals(savedGatewayDto.getPeripheralDevices().size(), 1);
+
+		dto = new CreatePeripheralDeviceDto();
+		dto.setStatus(PeripheralDeviceStatus.ONLINE);
+		dto.setUid(2L);
+		dto.setVendor("test");
+
+		gatewayService.createPeripheralDevice(savedGatewayDto.getSerialNumber(), dto);
+
+		savedGatewayDto = gatewayService.getGateway(savedGatewayDto.getSerialNumber());
+
+		assertEquals(savedGatewayDto.getPeripheralDevices().size(), 2);
+	}
+
+	@Test
+	public void shouldDeletePeripheralDevice() {
+		CreateGatewayDto gatewayDto = new CreateGatewayDto();
+		gatewayDto.setSerialNumber("1");
+		List<CreatePeripheralDeviceDto> peripheralDeviceDtos = new ArrayList<>();
+
+		CreatePeripheralDeviceDto dto = new CreatePeripheralDeviceDto();
+		dto.setStatus(PeripheralDeviceStatus.OFFLINE);
+		dto.setUid(1L);
+		dto.setVendor("test");
+
+		peripheralDeviceDtos.add(dto);
+		gatewayDto.setPeripheralDevices(peripheralDeviceDtos);
+		gatewayService.createGateway(gatewayDto);
+
+		List<GatewayDto> list = gatewayService.listGateways();
+
+		assertEquals(list.size(), 1);
+
+		GatewayDto savedGatewayDto = list.get(0);
+
+		assertEquals(savedGatewayDto.getPeripheralDevices().size(), 1);
+
+		gatewayService.deletePeripheralDevice(savedGatewayDto.getSerialNumber(), dto.getUid());
+
+		savedGatewayDto = gatewayService.getGateway(savedGatewayDto.getSerialNumber());
+
+		assertEquals(savedGatewayDto.getPeripheralDevices().size(), 0);
+	}
 }
